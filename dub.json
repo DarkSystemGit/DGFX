@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"darksystem"
+	],
+	"copyright": "Copyright © 2024, darksystem",
+	"dependencies": {
+		"dsdl2": ">=0.2.1-beta <0.3.0-0"
+	},
+	"description": "A minimal D application.",
+	"license": "MIT",
+	"name": "sdltest"
+}
