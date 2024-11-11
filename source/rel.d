@@ -13,7 +13,7 @@ class GFX{
         dsdl2.loadSO();
         dsdl2.init(video : true);
         this.dims=dimensions;
-        this.window=new dsdl2.Window(name,[0,0],dims);
+        this.window=new dsdl2.Window(name,[0,0],dims, resizeable : true);
         this.pixels=new ubyte[dims[0] * dims[1] * 4];
         this.renderSurface=new dsdl2.Surface(dims,window.surface.pixelFormat);
     }
