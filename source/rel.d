@@ -9,13 +9,15 @@ class GFX{
     uint[2] dims;
     SDL_EventType[] events; 
     string[] errors;
+    uint[255] palette;
+    uint[] renderBuffer;
     this(string name,uint[2] dimensions){
         dsdl2.loadSO();
         dsdl2.init(video : true);
         this.dims=dimensions;
-        this.window=new dsdl2.Window(name,[0,0],dims, resizeable : true);
-        this.pixels=new ubyte[dims[0] * dims[1] * 4];
-        this.renderSurface=new dsdl2.Surface(dims,window.surface.pixelFormat);
+        this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
+        this.pixels=new ubyte[320*240];
+        this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
     }
     void loop(){
         dsdl2.pumpEvents();
@@ -26,7 +28,9 @@ class GFX{
         if(err!=""){
             errors~=err;
         }
-        this.renderSurface.buffer[]=pixels;
+        foreach(i,ubyte pix;pixels){
+             (cast(uint*)this.renderSurface.buffer)[i]=palette[pix];
+        }
         window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
         window.update();
     }
