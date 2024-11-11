@@ -15,9 +15,9 @@ class GFX{
         this.dims=dimensions;
         this.window=new dsdl2.Window(name,[0,0],dims);
         this.pixels=new ubyte[dims[0] * dims[1] * 4];
-        this.renderSurface=new dsdl2.Surface(dims[0]*dims[1]*4,window.surface.pixelFormat);
+        this.renderSurface=new dsdl2.Surface(dims,window.surface.pixelFormat);
     }
-    loop(){
+    void loop(){
         dsdl2.pumpEvents();
         while (auto event = dsdl2.pollEvent()) {
             events~=event.sdlEventType();
@@ -27,7 +27,7 @@ class GFX{
             errors~=err;
         }
         this.renderSurface.buffer[]=pixels;
-        window.surface.blitScaled(renderSurface,Rect(0,0,window.width,window.height));
+        window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
         window.update();
     }
     ~this(){
