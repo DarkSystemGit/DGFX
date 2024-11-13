@@ -17,7 +17,7 @@ void main() {
     sp.pixels[]=2;
     sp.x=100;
     sp.y=100;
-    //sp.rotate(45);
+    sp.rotate(45);
     for (int i;running;i++) {
         long start=SDL_GetTicks();
         gfx.pixels[]=3;

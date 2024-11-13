@@ -53,21 +53,26 @@ struct Sprite{
         }
     }
     void rotate(float angle){
-        ubyte[] newPixels=new ubyte[32*32];
+        ubyte[] newPixels=new ubyte[64*64];
         float pi=3.1415926;
         float rad=angle*(pi/180);
         if(rad>2*pi)rad=0;
         float sinr=rad.sin;
         float cosr=rad.cos;
-        foreach(int i,ubyte pix;this.pixels){
-            int x=i%dims[0];
-            int y=i/dims[0];
-            float nx=16+(x*cosr)+(y*sinr);
-            float ny=16+(sinr*x)-(cosr*y);
-            writeln(x," ",y," ",cast(int)nx," ",cast(int)ny);
-            newPixels[cast(ulong)(nx+(ny*32))]=pix;
+        for(int x=0;x<24;x++){
+            for(int y=0;y<24;y++){
+                float ox=round(x*cosr+y*sinr);
+                float oy=round(-1*x*sinr+y*cosr);
+                /*float nx=16+(x*cosr)-(y*sinr);
+                float ny=16+(sinr*x)+(cosr*y);*/
+                writeln(ox," ",oy," ",x," ",y);
+                if((ox>0)&&(oy>0)){newPixels[cast(ulong)(x+(y*dims[1]))]=pixels[cast(ulong)(ox+(oy*dims[1]))];}else{newPixels[cast(ulong)(x+(y*dims[1]))]=0;}
+            }
         }    
         this.pixels=newPixels;
-        this.dims=[32,32];
+        this.dims=[64,64];
     }
 }
+/*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
+
+}*/
