@@ -4,7 +4,8 @@
 	],
 	"copyright": "Copyright © 2024, darksystem",
 	"dependencies": {
-		"dsdl2": ">=0.2.1-beta <0.3.0-0"
+		"dsdl2": ">=0.2.1-beta <0.3.0-0",
+		"dvec": "~>0.0.7"
 	},
 	"description": "A minimal D application.",
 	"license": "MIT",

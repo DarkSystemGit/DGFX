@@ -17,7 +17,13 @@ void main() {
     sp.pixels[]=2;
     sp.x=100;
     sp.y=100;
-    sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
+     sp.rotate(45);
     for (int i;running;i++) {
         long start=SDL_GetTicks();
         gfx.pixels[]=3;
@@ -25,7 +31,7 @@ void main() {
         if((gfx.events.length>0)&&(gfx.events[gfx.events.length-1]=="QuitEvent")){
             running=false;
         }
-        
+           
          sp.draw(gfx);
         gfx.loop();
         s+=(cast(float)1000/(cast(float)(SDL_GetTicks()-start)));
