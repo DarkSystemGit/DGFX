@@ -4,6 +4,7 @@
 		"bindbc-common": "1.0.1",
 		"bindbc-loader": "1.1.5",
 		"bindbc-sdl": "1.5.0",
-		"dsdl2": "0.2.1-beta"
+		"dsdl2": "0.2.1-beta",
+		"dvec": "0.0.7"
 	}
 }

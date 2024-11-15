@@ -19,7 +19,7 @@ class GFX{
         this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
         this.pixels=new ubyte[320*240];
         this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
-        this.palette[0]=0x000000;
+        this.palette[0]=0x000000FF;
     }
     void loop(){
         dsdl2.pumpEvents();
@@ -31,7 +31,7 @@ class GFX{
             errors~=err;
         }
         foreach(i,ubyte pix;pixels){
-            if(pix!=0){
+            if(pix!=1){
              (cast(uint*)this.renderSurface.buffer)[i]=palette[pix];
              pixels[i]=0;
             }
@@ -52,40 +52,52 @@ struct Sprite{
      ubyte[] rpixels;
     void draw(GFX gfx){
         if(angle==0){foreach(i,ubyte pix;pixels){
-            gfx.pixels[(((i/dims[0])+this.y)*320)+((i%dims[1])+this.x)]=pix;
+            gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
         }}else{
             foreach(i,ubyte pix;rpixels){
-            gfx.pixels[(((i/dims[0])+this.y)*320)+((i%dims[1])+this.x)]=pix;
+            gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
         }
         }
     }
     void rotate(float angle){
+        this.rpixels=new ubyte[32*32];
         this.angle+=angle;
         if(this.angle>360)this.angle-=360*floor(this.angle/360);
-        ubyte[] newPixels=new ubyte[24*24];
         float pi=3.1415926;
         float rad=this.angle*(pi/180);
         if(rad>2*pi)rad=0;
-        float sinr=rad.sin;
-        float cosr=rad.cos;
-        writeln(this.angle);
-        for(int x=0;x<16;x++){
-            for(int y=0;y<16;y++){
-                float ox=round(x*cosr+y*sinr);
-                float oy=round(-1*x*sinr+y*cosr);
+        for(int x=0;x<32;x++){
+            for(int y=0;y<32;y++){
+                float[] xy=matrix(x,y,dims,rad);
+                float ox=xy[0];
+                float oy=xy[1];
                 /*float nx=16+(x*cosr)-(y*sinr);
                 float ny=16+(sinr*x)+(cosr*y);*/
-                //write(ox," ",oy," ",x," ",y);
+                if(ox<16&&oy<16)writeln(ox," ",oy," ",x," ",y," ",this.angle," ",rad);
                 //if(cast(ulong)(ox+(oy*dims[1]))>255)newPixels.length=cast(ulong)(ox+(oy*dims[1]));
-                if((ox>0)&&(oy>0)&&(cast(ulong)(ox+(oy*dims[1]))<pixels.length)){setitem(newPixels,x,y,pixels[cast(ulong)(ox+(oy*dims[1]))],dims);}else{setitem(newPixels,x,y,0,dims);}
+                if((ox>0)&&(oy>0)&&(cast(ulong)(ox+(oy*16))<pixels.length)){
+                    setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*16))],[32,32]);
+                }else{
+                        setitem(rpixels,x,y,0,[32,32]);
+                }
             }
         }    
-        this.rpixels=newPixels;
-        this.dims=[16,16];
+        this.dims=[32,32];
     }
 }
 void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,ubyte[] dims){
+    if(cast(ulong)(x+((y)*dims[1]))>=pixels.length)return;
     pixels[cast(ulong)(x+((y)*dims[1]))]=pix;
+}
+float[] matrix(int x,int y,ubyte[] dims,float angle){
+    float c=cos(angle);
+    float s=sin(angle);
+    x-=16;
+    y-=16;
+    return [
+        round(x*c+y*s)+16,
+        round(y*c-x*s)+16
+    ];
 }
 /*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
 
