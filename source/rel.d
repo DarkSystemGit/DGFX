@@ -52,14 +52,15 @@ struct Sprite{
      ubyte[] rpixels;
     void draw(GFX gfx){
         if(angle==0){foreach(i,ubyte pix;pixels){
-            gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
+            if(pix!=0)gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
         }}else{
             foreach(i,ubyte pix;rpixels){
-            gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
+            if(pix!=0)gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
         }
         }
     }
     void rotate(float angle){
+        this.dims=[32,32];
         this.rpixels=new ubyte[32*32];
         this.angle+=angle;
         if(this.angle>360)this.angle-=360*floor(this.angle/360);
@@ -73,16 +74,17 @@ struct Sprite{
                 float oy=xy[1];
                 /*float nx=16+(x*cosr)-(y*sinr);
                 float ny=16+(sinr*x)+(cosr*y);*/
-                if(ox<16&&oy<16)writeln(ox," ",oy," ",x," ",y," ",this.angle," ",rad);
                 //if(cast(ulong)(ox+(oy*dims[1]))>255)newPixels.length=cast(ulong)(ox+(oy*dims[1]));
                 if((ox>0)&&(oy>0)&&(cast(ulong)(ox+(oy*16))<pixels.length)){
+                    writeln(ox," ",oy);
                     setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*16))],[32,32]);
                 }else{
-                        setitem(rpixels,x,y,0,[32,32]);
+                    setitem(rpixels,x,y,0,[32,32]);
+                    writeln(ox," ",oy);
                 }
             }
         }    
-        this.dims=[32,32];
+        
     }
 }
 void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,ubyte[] dims){
@@ -92,11 +94,13 @@ void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,ubyte[] dims){
 float[] matrix(int x,int y,ubyte[] dims,float angle){
     float c=cos(angle);
     float s=sin(angle);
-    x-=16;
-    y-=16;
+    int ox=8;
+    int oy=8;
+    x-=ox;
+    y-=oy;
     return [
-        round(x*c+y*s)+16,
-        round(y*c-x*s)+16
+        round(x*c+y*s)+ox,
+        round(y*c-x*s)+oy
     ];
 }
 /*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
