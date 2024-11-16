@@ -44,7 +44,7 @@ class GFX{
     }
 }
 struct Sprite{
-    ubyte[2] dims=[16,16];
+    uint[2] dims=[16,16];
     ubyte[] pixels=new ubyte[16*16];
     uint x;
     uint y;
@@ -60,39 +60,37 @@ struct Sprite{
         }
     }
     void rotate(float angle){
-        this.dims=[32,32];
-        this.rpixels=new ubyte[32*32];
+        if((dims[1]/2)*(dims[0]/2)<=64)this.dims=[dims[0]*2,dims[1]*2];
+        this.rpixels=new ubyte[dims[0]*dims[1]];
         this.angle+=angle;
         if(this.angle>360)this.angle-=360*floor(this.angle/360);
         float pi=3.1415926;
         float rad=this.angle*(pi/180);
         if(rad>2*pi)rad=0;
-        for(int x=0;x<32;x++){
-            for(int y=0;y<32;y++){
+        for(int x=0;x<dims[0];x++){
+            for(int y=0;y<dims[1];y++){
                 float[] xy=matrix(x,y,dims,rad);
                 float ox=xy[0];
                 float oy=xy[1];
-                /*float nx=16+(x*cosr)-(y*sinr);
-                float ny=16+(sinr*x)+(cosr*y);*/
-                //if(cast(ulong)(ox+(oy*dims[1]))>255)newPixels.length=cast(ulong)(ox+(oy*dims[1]));
                 if((ox>0)&&(oy>0)&&(ox<16)&&(oy<16)){
-                    setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*16))],[32,32]);
+                    writeln(ox," ",oy," ",x," ",y," ",dims);
+                    setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*(dims[0]/2)))],dims);
                 }else{
-                    writeln(ox," ",oy," ",0," ",dims);
+                    setitem(rpixels,x,y,0,dims);
                 }
             }
         }    
     }
 }
-void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,ubyte[] dims){
+void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,uint[] dims){
     if(cast(ulong)(x+((y)*dims[1]))>=pixels.length)return;
     pixels[cast(ulong)(x+((y)*dims[1]))]=pix;
 }
-float[] matrix(int x,int y,ubyte[] dims,float angle){
+float[] matrix(int x,int y,uint[] dims,float angle){
     float c=cos(angle);
     float s=sin(angle);
-    int ox=8;
-    int oy=8;
+    int ox=(dims[0]/4);
+    int oy=(dims[1]/4);
     x-=ox;
     y-=oy;
     return [
