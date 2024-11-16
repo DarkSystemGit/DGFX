@@ -18,10 +18,7 @@ void main() {
     gfx.palette[6]=0x00FFFFFF;
     float s=0;
     Sprite sp;
-    for(int i;i<sp.pixels.length;i++){
-        sp.pixels[i]=((i%16)%3)+3;
-        if(floor(cast(float)(i)/16)==1)sp.pixels[i]=6;
-    }
+    sp.pixels[]=3;
     sp.x=100;
     sp.y=100;
                      

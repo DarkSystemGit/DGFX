@@ -73,7 +73,6 @@ struct Sprite{
                 float ox=xy[0];
                 float oy=xy[1];
                 if((ox>0)&&(oy>0)&&(ox<16)&&(oy<16)){
-                    writeln(ox," ",oy," ",x," ",y," ",dims);
                     setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*(dims[0]/2)))],dims);
                 }else{
                     setitem(rpixels,x,y,0,dims);
