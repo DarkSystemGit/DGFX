@@ -76,16 +76,12 @@ struct Sprite{
                 float ny=16+(sinr*x)+(cosr*y);*/
                 //if(cast(ulong)(ox+(oy*dims[1]))>255)newPixels.length=cast(ulong)(ox+(oy*dims[1]));
                 if((ox>0)&&(oy>0)&&(ox<16)&&(oy<16)){
-                    if(x>=16||y>=16)writeln("LOOK");
-                    writeln(ox," ",oy," ",pixels[cast(ulong)(ox+(oy*16))]," ",dims);
                     setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*16))],[32,32]);
                 }else{
-                    setitem(rpixels,x,y,0,[32,32]);
                     writeln(ox," ",oy," ",0," ",dims);
                 }
             }
         }    
-        writeln(rpixels);
     }
 }
 void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,ubyte[] dims){
