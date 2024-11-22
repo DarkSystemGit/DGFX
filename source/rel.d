@@ -1,7 +1,7 @@
 import std;
 static import dsdl2;
 import bindbc.sdl;
-
+float pi=3.1415926;
 class GFX{
     dsdl2.Window window;
     dsdl2.Surface renderSurface;
@@ -49,53 +49,145 @@ struct Sprite{
     uint x;
     uint y;
     float angle=0;
-     ubyte[] rpixels;
+    bool mod;
+     ubyte[] mpixels;
+     float[2] scaledDims=[16,16];
     void draw(GFX gfx){
-        if(angle==0){foreach(i,ubyte pix;pixels){
-            if(pix!=0)gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
-        }}else{
-            foreach(i,ubyte pix;rpixels){
-            if(pix!=0)gfx.pixels[cast(ulong)(((floor(cast(float)(i/dims[0]))+this.x)*320)+((i%dims[1])+this.y))]=pix;
+        if(!mod){
+        foreach(i,ubyte pix;pixels){
+                int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
+                int y=cast(int)((i%dims[1])+this.y);
+                if(
+                    (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
+                ){
+                    gfx.pixels[cast(ulong)((y*320)+x)]=pix;
+                }
+            }
+        }else{
+            foreach(i,ubyte pix;mpixels){
+                int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
+                int y=cast(int)((i%dims[1])+this.y);
+                if(
+                    (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
+                ){
+                    
+                    gfx.pixels[cast(ulong)((y*320)+x)]=pix;
+                     
+                }
+
         }
         }
     }
-    void rotate(float angle){
+    void rotatei(){
+        uint[] dims=[32,32];
         if((dims[1]/2)*(dims[0]/2)<=64)this.dims=[dims[0]*2,dims[1]*2];
-        this.rpixels=new ubyte[dims[0]*dims[1]];
-        this.angle+=angle;
+        this.mpixels=new ubyte[dims[0]*dims[1]];
         if(this.angle>360)this.angle-=360*floor(this.angle/360);
-        float pi=3.1415926;
         float rad=this.angle*(pi/180);
+        
         if(rad>2*pi)rad=0;
         for(int x=0;x<dims[0];x++){
             for(int y=0;y<dims[1];y++){
                 float[] xy=matrix(x,y,dims,rad);
                 float ox=xy[0];
                 float oy=xy[1];
-                if((ox>0)&&(oy>0)&&(ox<16)&&(oy<16)){
-                    setitem(rpixels,x,y,pixels[cast(ulong)(ox+(oy*(dims[0]/2)))],dims);
+                if((ox>=0)&&(oy>=0)&&(ox<16)&&(oy<16)){
+                    setitem(this.mpixels,x,y,pixels[cast(ulong)(ox+(oy*(16/2)))],dims);
                 }else{
-                    setitem(rpixels,x,y,0,dims);
+                    setitem(this.mpixels,x,y,0,dims);
                 }
             }
-        }    
+        }   
+          
+
+    }
+    void resizei(){
+        float[2] relativeScale;
+        relativeScale[0]=32/scaledDims[0];
+        relativeScale[1]=32/scaledDims[1];
+        writeln(relativeScale,this.dims,this.scaledDims);
+        //foreach final pixel, old=(round(x/scale[0]),round(y/scale[0])
+        ubyte[] opixels=this.mpixels.dup;
+        this.mpixels.length=0;
+        this.mpixels=new ubyte[dims[0]*dims[1]];
+        //writeln(opixels);
+        for(int y=0;y<dims[1];y++){
+            for(int x=0;x<dims[0];x++){
+                float ox=floor(x*relativeScale[0]);
+                float oy=floor(y*relativeScale[1]);
+                //writeln([x,y,ox,oy,x*relativeScale[0],y*relativeScale[1],opixels[cast(ulong)(ox+(oy*32))]],dims,relativeScale);
+                if((ox>=0)&&(oy>=0)&&(ox<32)&&(oy<32)){
+                    //writeln([x,y,ox,oy,opixels[cast(ulong)(ox+(oy*32))]],dims);
+                    this.mpixels[cast(ulong)(x+(y*dims[0]))]=opixels[cast(ulong)(ox+(oy*32))];
+                }else{
+                    
+                    setitem(this.mpixels,x,y,0,dims);
+                }
+            }
+        }
+      //writeln(this.mpixels);
+    }
+    void addOp(SpriteOp op){
+        
+        switch(op.op){
+            case SpriteOps.scale:
+            this.scaledDims=[this.scaledDims[0]*op.args[0],this.scaledDims[1]*op.args[1]];
+            break;
+            case SpriteOps.rotate:
+            this.angle+=op.args[0];
+            break;
+            case SpriteOps.move:
+            this.x=cast(uint)round(op.args[0]);
+            this.y=cast(uint)round(op.args[1]);
+            break;
+            case SpriteOps.resize:
+            this.scaledDims=[op.args[0],op.args[1]];
+            break;
+            default:
+            break;
+        }
+        this.mpixels=new ubyte[32*32];
+        foreach(i,ubyte pix;mpixels){
+            int x=cast(int)(floor(cast(float)(i/32)));
+            int y=cast(int)((i%32));
+            if(x<16&&y<16){
+                setitem(this.mpixels,x,y,pixels[cast(ulong)(x+((y)*16))],[32,32]);
+            }
+        }
+        this.mod=true;
+        if(this.angle!=0){this.rotatei();}
+
+        this.dims=[cast(uint)round(scaledDims[0]),cast(uint)round(scaledDims[1])];
+        this.resizei();
+        //this.dims=[this.dims[0]/2,this.dims[1]/2];
+        
     }
 }
 void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,uint[] dims){
-    if(cast(ulong)(x+((y)*dims[1]))>=pixels.length)return;
-    pixels[cast(ulong)(x+((y)*dims[1]))]=pix;
+    if(cast(ulong)(x+((y)*dims[0]))>=pixels.length)return;
+    pixels[cast(ulong)(x+((y)*dims[0]))]=pix;
 }
 float[] matrix(int x,int y,uint[] dims,float angle){
     float c=cos(angle);
     float s=sin(angle);
-    int ox=(dims[0]/4);
-    int oy=(dims[1]/4);
+    int ox=cast(int)(dims[0]/4);
+    int oy=cast(int)(dims[1]/4);
     x-=ox;
     y-=oy;
     return [
         round(x*c+y*s)+ox,
         round(y*c-x*s)+oy
     ];
+}
+enum SpriteOps{
+    scale,
+    rotate,
+    resize,
+    move
+}
+struct SpriteOp{
+    SpriteOps op;
+    float[] args;
 }
 /*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
 

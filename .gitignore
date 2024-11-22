@@ -9,6 +9,7 @@ sdltest.dll
 sdltest.a
 sdltest.lib
 sdltest-test-*
+sdltest
 *.exe
 *.pdb
 *.o
