@@ -105,19 +105,18 @@ struct Sprite{
         float[2] relativeScale;
         relativeScale[0]=32/scaledDims[0];
         relativeScale[1]=32/scaledDims[1];
-        writeln(relativeScale,this.dims,this.scaledDims);
         //foreach final pixel, old=(round(x/scale[0]),round(y/scale[0])
         ubyte[] opixels=this.mpixels.dup;
         this.mpixels.length=0;
         this.mpixels=new ubyte[dims[0]*dims[1]];
-        //writeln(opixels);
+
         for(int y=0;y<dims[1];y++){
             for(int x=0;x<dims[0];x++){
                 float ox=floor(x*relativeScale[0]);
                 float oy=floor(y*relativeScale[1]);
-                //writeln([x,y,ox,oy,x*relativeScale[0],y*relativeScale[1],opixels[cast(ulong)(ox+(oy*32))]],dims,relativeScale);
+            
                 if((ox>=0)&&(oy>=0)&&(ox<32)&&(oy<32)){
-                    //writeln([x,y,ox,oy,opixels[cast(ulong)(ox+(oy*32))]],dims);
+
                     this.mpixels[cast(ulong)(x+(y*dims[0]))]=opixels[cast(ulong)(ox+(oy*32))];
                 }else{
                     
@@ -125,7 +124,7 @@ struct Sprite{
                 }
             }
         }
-      //writeln(this.mpixels);
+
     }
     void addOp(SpriteOp op){
         
@@ -161,6 +160,30 @@ struct Sprite{
         this.resizei();
         //this.dims=[this.dims[0]/2,this.dims[1]/2];
         
+    }
+    void resize(float width,float height){
+        SpriteOp s;
+        s.op=SpriteOps.resize;
+        s.args=[width,height];
+        this.addOp(s);
+    }
+    void scale(float multiplier){
+        SpriteOp s;
+        s.op=SpriteOps.scale;
+        s.args=[multiplier,multiplier];
+        this.addOp(s);
+    }
+    void move(float x,float y){
+        SpriteOp m;
+        m.op=SpriteOps.move;
+        m.args=[x,y];
+        this.addOp(m);
+    }
+    void rotate(float angle){
+        SpriteOp r;
+        r.op=SpriteOps.rotate;
+        r.args=[angle];
+        this.addOp(r);
     }
 }
 void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,uint[] dims){

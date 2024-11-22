@@ -19,41 +19,21 @@ void main() {
     float s=0;
     Sprite sp;
     sp.pixels[]=3;
-    //sp.x=100;
-    //sp.y=100;
-                     
-    //sp.rotate(45);
-    SpriteOp r;
-    r.op=SpriteOps.rotate;
-    r.args=[1];
-    SpriteOp sc;
-    sc.op=SpriteOps.scale;
-    sc.args=[1,1];
-    SpriteOp m;
-    m.op=SpriteOps.move;
-    m.args=[100,100];
-
-    //sp.addOp(sc);
-    //sp.addOp(r);
-            //writeln(sp.mpixels);
     for (int i;running;i++) {
         long start=SDL_GetTicks();
         gfx.pixels[]=2;
-        m.args=cast(float[])[sp.x+.5,sp.y+.5];
-        sc.args[]*=1.001;
-        sp.addOp(r);
-        sp.addOp(sc);
-        sp.addOp(m);
+        sp.move(sp.x+.5,sp.y+.5);
+        sp.rotate(45);
+        sp.scale(1.05);
+        sp.move(sp.x+.5,sp.y+.5);
         if((gfx.events.length>0)&&(gfx.events[gfx.events.length-1]=="QuitEvent")){
             running=false;
         }
-        
-        //sp.resize([sp.dims[0]+1,sp.dims[1]+1]); 
          sp.draw(gfx);
         gfx.loop();
        
         s+=(cast(float)1000/(cast(float)(SDL_GetTicks()-start)));
-        //writef("FPS: %f\n",s/cast(float)i);
+        writef("FPS: %f\n",s/cast(float)i);
         
     } 
 
