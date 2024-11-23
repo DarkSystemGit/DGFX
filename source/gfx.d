@@ -7,6 +7,7 @@ class GFX{
     dsdl2.Window window;
     dsdl2.Surface renderSurface;
     ubyte[] pixels;
+    ubyte[] renderPixels;
     bool running;
     uint[2] dims;
     string[] events; 
@@ -18,11 +19,13 @@ class GFX{
         dsdl2.init(video : true);
         this.dims=dimensions;
         this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
+        this.renderPixels=new ubyte[320*240];
         this.pixels=new ubyte[320*240];
         this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
-        this.palette=defaultPalette.dpalette;
+        this.palette=defaultPalette.palette;
     }
     void loop(){
+        this.renderPixels[]=this.pixels[];
         dsdl2.pumpEvents();
         while (auto event = dsdl2.pollEvent()) {
             events~=event.toString().replace("dsdl2.","").replace("()","");
@@ -31,14 +34,18 @@ class GFX{
         if(err!=""){
             errors~=err;
         }
-        foreach(i,ubyte pix;pixels){
+        foreach(i,ubyte pix;renderPixels){
             if(pix!=1){
              (cast(uint*)this.renderSurface.buffer)[i]=palette[pix];
-             pixels[i]=0;
+             renderPixels[i]=0;
             }
         }
         window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
         window.update();
+    }
+    void render(){
+        this.loop();
+        this.pixels[]=0;
     }
     ~this(){
          dsdl2.quit();
@@ -267,7 +274,3 @@ class TileMap{
         }
     }    
 }
-
-/*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
-
-}*/
