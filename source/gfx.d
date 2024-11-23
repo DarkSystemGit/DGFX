@@ -1,6 +1,7 @@
 import std;
 static import dsdl2;
 import bindbc.sdl;
+import defaultPalette;
 float pi=3.1415926;
 class GFX{
     dsdl2.Window window;
@@ -10,7 +11,7 @@ class GFX{
     uint[2] dims;
     string[] events; 
     string[] errors;
-    uint[255] palette;
+    uint[256] palette;
     uint[] renderBuffer;
     this(string name,uint[2] dimensions){
         dsdl2.loadSO();
@@ -19,7 +20,7 @@ class GFX{
         this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
         this.pixels=new ubyte[320*240];
         this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
-        this.palette[0]=0x000000FF;
+        this.palette=defaultPalette.dpalette;
     }
     void loop(){
         dsdl2.pumpEvents();

@@ -1,36 +1,30 @@
 
 
 import std.stdio;
-import rel;
+import gfx;
 import std.random;
 import bindbc.sdl;
 import std.math;
 void main() {
-    GFX gfx=new GFX("test",[640,480]);
+    GFX screen=new GFX("test",[640,480]);
     // The application loop
     bool running = true;
     bool white;    //R,G,B,A
-    gfx.palette[1]=0;
-        gfx.palette[2]=0xFFFFFFFF;
-    gfx.palette[3]=0xFF0000FF;
-    gfx.palette[4]=0x00FF00FF;
-    gfx.palette[5]=0x0000FFFF;
-    gfx.palette[6]=0x00FFFFFF;
     float s=0;
     Sprite sp;
-    sp.pixels[]=3;
+    sp.pixels[]=255;
     for (int i;running;i++) {
         long start=SDL_GetTicks();
-        gfx.pixels[]=2;
+        screen.pixels[]=2;
         sp.move(sp.x+.5,sp.y+.5);
         sp.rotate(45);
         sp.scale(1.05);
         sp.move(sp.x+.5,sp.y+.5);
-        if((gfx.events.length>0)&&(gfx.events[gfx.events.length-1]=="QuitEvent")){
+        if((screen.events.length>0)&&(screen.events[screen.events.length-1]=="QuitEvent")){
             running=false;
         }
-         sp.draw(gfx);
-        gfx.loop();
+         sp.draw(screen);
+        screen.loop();
        
         s+=(cast(float)1000/(cast(float)(SDL_GetTicks()-start)));
         writef("FPS: %f\n",s/cast(float)i);
