@@ -213,6 +213,61 @@ struct SpriteOp{
     SpriteOps op;
     float[] args;
 }
+class TileMap{
+    ubyte[] tiles;
+    uint[] dims;
+    ubyte[64][512] tileset;
+    int x;
+    int y;
+    bool mod;
+    ubyte[320*240] pixels;
+    this(ubyte[] tiles,uint[] dims,int x,int y){
+        this.tiles=tiles;
+        this.dims=dims;
+        this.x=x;
+        this.y=y;
+        this.mod=true;
+    }
+    void draw(){
+        if(!this.mod)return;
+        foreach(p,ubyte tileid;tiles){
+            int x=cast(int)(floor(cast(float)(p/dims[0]))+x)*8+this.x;
+            int y=cast(int)((p%dims[1])+y)*8+this.y;
+            ubyte[64] tile=tileset[tileid];
+            for(int i=0;i<8;i++){
+                for(int j=0;j<8;j++){
+                    pixels[cast(ulong)((y+i)*320+(x+j))]=tile[cast(ulong)(i*8+j)];
+                }
+            }
+
+        } 
+        this.mod=false;   
+    }
+    void setTile(uint x,uint y,ubyte tileid){
+        this.tiles[cast(ulong)(x+(y*dims[0]))]=tileid;
+        this.mod=true;
+    }
+    void setTileset(ubyte[64] tile,uint tileid){
+        this.tileset[tileid]=tile;
+        this.mod=true;
+    }
+    void move(int x,int y){
+        this.x=x;
+        this.y=y;
+        this.mod=true;
+    }
+    void resize(uint width,uint height){
+        this.dims=[width,height];
+        this.mod=true;
+    }
+    void render(GFX gfx){
+        this.draw();
+        foreach(i,ubyte pix;pixels){
+            if(pix!=0)gfx.pixels[i]=pix;
+        }
+    }    
+}
+
 /*int[] getPixelRotated(ubyte[] pixels,uint x,uint y,float angle){
 
 }*/
