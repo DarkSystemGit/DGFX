@@ -4,10 +4,9 @@
 	],
 	"copyright": "Copyright © 2024, darksystem",
 	"dependencies": {
-		"dsdl2": ">=0.2.1-beta <0.3.0-0",
-		"dvec": "~>0.0.7"
+		"dsdl2": ">=0.2.1-beta <0.3.0-0"
 	},
-	"description": "A minimal D application.",
+	"description": "A pixel graphics libary for D",
 	"license": "MIT",
-	"name": "sdltest"
+	"name": "dgfx"
 }

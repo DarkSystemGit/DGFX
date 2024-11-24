@@ -5,7 +5,6 @@ import gfx;
 import std.random;
 import bindbc.sdl;
 import std.math;
-import threading;
 void main() {
     GFX screen=new GFX("test");
     
