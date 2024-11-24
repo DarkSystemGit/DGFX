@@ -20,7 +20,6 @@ class GFXThread{
         this.dims=dimensions;
         this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
         this.renderPixels=new ubyte[320*240];
-        this.pixels=new ubyte[320*240];
         this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
         this.palette=defaultPalette.palette;
     }
@@ -35,7 +34,7 @@ class GFXThread{
             errors~=err;
         }
         foreach(i,ubyte pix;renderPixels){
-            if(pix!=1){
+            if(pix!=0){
              (cast(uint*)this.renderSurface.buffer)[i]=palette[pix];
              //renderPixels[i]=0;
             }
@@ -43,10 +42,7 @@ class GFXThread{
         window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
         window.update();
     }
-    void render(){
-        this.renderPixels=this.pixels.dup;
-        this.pixels[]=0;
-    }
+   
     ~this(){
          dsdl2.quit();
     }
