@@ -1,7 +1,7 @@
 
 
 import std.stdio;
-import gfx;
+import dgfx;
 import std.random;
 import bindbc.sdl;
 import std.math;
