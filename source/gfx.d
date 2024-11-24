@@ -3,7 +3,7 @@ static import dsdl2;
 import bindbc.sdl;
 import defaultPalette;
 float pi=3.1415926;
-class GFX{
+class GFXThread{
     dsdl2.Window window;
     dsdl2.Surface renderSurface;
     ubyte[] pixels;
@@ -25,7 +25,7 @@ class GFX{
         this.palette=defaultPalette.palette;
     }
     void loop(){
-        this.renderPixels[]=this.pixels[];
+        
         dsdl2.pumpEvents();
         while (auto event = dsdl2.pollEvent()) {
             events~=event.toString().replace("dsdl2.","").replace("()","");
@@ -37,14 +37,14 @@ class GFX{
         foreach(i,ubyte pix;renderPixels){
             if(pix!=1){
              (cast(uint*)this.renderSurface.buffer)[i]=palette[pix];
-             renderPixels[i]=0;
+             //renderPixels[i]=0;
             }
         }
         window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
         window.update();
     }
     void render(){
-        this.loop();
+        this.renderPixels=this.pixels.dup;
         this.pixels[]=0;
     }
     ~this(){
@@ -60,7 +60,7 @@ struct Sprite{
     bool mod;
      ubyte[] mpixels;
      float[2] scaledDims=[16,16];
-    void draw(GFX gfx){
+    void draw(ref ubyte[] rpixels){
         if(!mod){
         foreach(i,ubyte pix;pixels){
                 int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
@@ -68,7 +68,7 @@ struct Sprite{
                 if(
                     (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
                 ){
-                    gfx.pixels[cast(ulong)((y*320)+x)]=pix;
+                    rpixels[cast(ulong)((y*320)+x)]=pix;
                 }
             }
         }else{
@@ -79,7 +79,7 @@ struct Sprite{
                     (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
                 ){
                     
-                    gfx.pixels[cast(ulong)((y*320)+x)]=pix;
+                    rpixels[cast(ulong)((y*320)+x)]=pix;
                      
                 }
 
@@ -267,10 +267,10 @@ class TileMap{
         this.dims=[width,height];
         this.mod=true;
     }
-    void render(GFX gfx){
+    void render(ref ubyte[] rpixels){
         this.draw();
         foreach(i,ubyte pix;pixels){
-            if(pix!=0)gfx.pixels[i]=pix;
+            if(pix!=0)rpixels[i]=pix;
         }
     }    
 }
