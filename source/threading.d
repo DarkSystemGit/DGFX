@@ -9,20 +9,21 @@ import defaultPalette;
 
 __gshared ubyte[] spixels=new ubyte[320*240];
 shared bool srender;
-__gshared string[] sevents=new string[0];
+__gshared string[] sevents;
 __gshared uint[256] spalette;
-
+__gshared bool running;
 
 static void gfxThread(Tid owner){
     GFXThread gfxi;
     bool draw=true;
+   
     receive((string name){    
         gfxi=new GFXThread(name,[640,480]);
-        while(true){
+        gfxi.palette=spalette;
+        while(running){
+             sevents=gfxi.events;
             if(srender){gfxi.renderPixels=spixels.dup;srender=false;}
-            gfxi.palette=spalette;
             gfxi.loop();
-            sevents=gfxi.events;
         }
     }
     );
@@ -39,9 +40,14 @@ class GFX{
         send(this.thread, name);
         this.events=sevents;
         this.palette=spalette;
+        running=true;
     }
     void render(){
         srender=true;
         while(srender){}
+        this.events=sevents;
+    }
+    void kill(){
+        running=false;
     }
 }

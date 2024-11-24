@@ -47,5 +47,6 @@ void main() {
         //writef("FPS: %f\n",s/cast(float)i);
         
     } 
+    screen.kill();
     return;
 }
