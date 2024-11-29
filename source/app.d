@@ -6,7 +6,7 @@ import std.random;
 import bindbc.sdl;
 import std.math;
 void main() {
-    GFX screen=new GFX("test");
+    GFX screen=new GFX("test",[0,0]);
     
     TileMap tmap=new TileMap(new ubyte[16*16],[16,16],0,0);
     ubyte[64] tile;

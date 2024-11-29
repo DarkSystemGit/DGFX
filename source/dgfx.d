@@ -3,6 +3,7 @@ import std;
 import core.atomic;
 import core.thread;
 import core.sync;
+import core.time;
 static import dsdl2;
 import bindbc.sdl;
 import defaultPalette;
@@ -12,12 +13,11 @@ shared bool srender;
 __gshared string[] sevents;
 __gshared uint[256] spalette;
 __gshared bool running;
-
-static void gfxThread(Tid owner){
+__gshared int[] screenDims=[320,240];
+static void gfxThread(Tid owner,string name){
     GFXThread gfxi;
     bool draw=true;
-   
-    receive((string name){    
+    
         gfxi=new GFXThread(name,[640,480]);
         gfxi.palette=spalette;
         while(running){
@@ -25,26 +25,30 @@ static void gfxThread(Tid owner){
             if(srender){gfxi.renderPixels=spixels.dup;srender=false;}
             gfxi.loop();
         }
-    }
-    );
+    
+    
 }
 class GFX{
     Tid thread;
     ubyte[] pixels;
     string[] events;
     uint[256] palette;
-    this(string name){
+    this(string name,int[] dims){
+        if(dims[0]+dims[1]==0)dims[]=screenDims;
+        screenDims[]=dims;
+        spixels=new ubyte[dims[0]*dims[1]];
         spalette=defaultPalette.palette;
         this.pixels=spixels;     
-        this.thread = spawn(&gfxThread, thisTid);
-        send(this.thread, name);
+        this.thread = spawn(&gfxThread, thisTid,name);
         this.events=sevents;
         this.palette=spalette;
         running=true;
     }
     void render(){
         srender=true;
-        while(srender){}
+        while(srender){
+            Thread.sleep(dur!("msecs")(1));
+        }
         this.events=sevents;
     }
     void kill(){
@@ -66,9 +70,9 @@ struct Sprite{
                 int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
                 int y=cast(int)((i%dims[1])+this.y);
                 if(
-                    (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
+                    (pix!=0)&&(x<screenDims[0])&&(y<screenDims[1])&&(x>=0)&&(y>=0)
                 ){
-                    rpixels[cast(ulong)((y*320)+x)]=pix;
+                    rpixels[cast(ulong)((y*screenDims[0])+x)]=pix;
                 }
             }
         }else{
@@ -76,10 +80,10 @@ struct Sprite{
                 int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
                 int y=cast(int)((i%dims[1])+this.y);
                 if(
-                    (pix!=0)&&(x<320)&&(y<240)&&(x>=0)&&(y>=0)
+                    (pix!=0)&&(x<screenDims[0])&&(y<screenDims[1])&&(x>=0)&&(y>=0)
                 ){
                     
-                    rpixels[cast(ulong)((y*320)+x)]=pix;
+                    rpixels[cast(ulong)((y*screenDims[0])+x)]=pix;
                      
                 }
 
@@ -227,13 +231,14 @@ class TileMap{
     int x;
     int y;
     bool mod;
-    ubyte[320*240] pixels;
+    ubyte[] pixels;
     this(ubyte[] tiles,uint[] dims,int x,int y){
         this.tiles=tiles;
         this.dims=dims;
         this.x=x;
         this.y=y;
         this.mod=true;
+        this.pixels=new ubyte[screenDims[0]*screenDims[1]];
     }
     void draw(){
         if(!this.mod)return;
@@ -243,7 +248,7 @@ class TileMap{
             ubyte[64] tile=tileset[tileid];
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
-                    pixels[cast(ulong)((y+i)*320+(x+j))]=tile[cast(ulong)(i*8+j)];
+                    pixels[cast(ulong)((y+i)*screenDims[0]+(x+j))]=tile[cast(ulong)(i*8+j)];
                 }
             }
 
