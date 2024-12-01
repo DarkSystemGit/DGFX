@@ -15,3 +15,8 @@ See ```source/test.d``` as an example for usage.
 v1.0.0 Initial Release
 
 v1.1.0 Readme and Docs
+
+v1.1.1 Fixed bug with rendering
+
+
+v1.2.0 Added support for better keyboard input
