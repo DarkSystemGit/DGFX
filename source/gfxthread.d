@@ -22,6 +22,15 @@ class GFXThread{
         this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
         this.palette=defaultPalette.palette;
     }
+    dsdl2.Scancode[] getPressedKeys(){
+        dsdl2.Scancode[] keys;
+        foreach(int i,bool key;dsdl2.getKeyboardState()){
+            if(key){
+                keys~=cast(dsdl2.Scancode)i;
+            }
+        }
+        return keys;
+    }
     void loop(){
         
         dsdl2.pumpEvents();

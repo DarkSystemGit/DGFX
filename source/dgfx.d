@@ -14,6 +14,7 @@ __gshared string[] sevents;
 __gshared uint[256] spalette;
 __gshared bool running;
 __gshared int[] screenDims=[320,240];
+__gshared dsdl2.Scancode[] skeys;
 static void gfxThread(Tid owner,string name){
     GFXThread gfxi;
     bool draw=true;
@@ -22,6 +23,7 @@ static void gfxThread(Tid owner,string name){
         gfxi.palette=spalette;
         while(running){
              sevents=gfxi.events;
+             skeys=gfxi.getPressedKeys();
             if(srender){gfxi.renderPixels=spixels.dup;srender=false;}
             gfxi.loop();
         }
@@ -50,6 +52,9 @@ class GFX{
             Thread.sleep(dur!("msecs")(1));
         }
         this.events=sevents;
+    }
+    dsdl2.Scancode[] getPressedKeys(){
+        return skeys;
     }
     void kill(){
         running=false;

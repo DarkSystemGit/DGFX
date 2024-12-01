@@ -42,6 +42,7 @@ void main() {
         sp.draw(screen.pixels);
         screen.pixels[]=screen.pixels[]+cast(ubyte)colchange;
         screen.render();
+        writeln(screen.getPressedKeys());
         //s+=(cast(float)1000/(cast(float)(SDL_GetTicks()-start)));
         //writef("FPS: %f\n",s/cast(float)i);
         
