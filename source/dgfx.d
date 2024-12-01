@@ -21,11 +21,15 @@ static void gfxThread(Tid owner,string name){
     
         gfxi=new GFXThread(name,[640,480]);
         gfxi.palette=spalette;
+         gfxi.loop();
         while(running){
+        if(srender){
              sevents=gfxi.events;
              skeys=gfxi.getPressedKeys();
-            if(srender){gfxi.renderPixels=spixels.dup;srender=false;}
+            gfxi.renderPixels=spixels;
             gfxi.loop();
+            srender=false;
+            }
         }
     
     
