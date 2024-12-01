@@ -18,5 +18,6 @@ v1.1.0 Readme and Docs
 
 v1.1.1 Fixed bug with rendering
 
-
 v1.2.0 Added support for better keyboard input
+
+v1.2.1 Optimized rendering
