@@ -4,7 +4,7 @@
 	],
 	"copyright": "Copyright © 2024, darksystem",
 	"dependencies": {
-		"dsdl2": ">=0.2.1-beta <0.3.0-0"
+		"dsdl": "~main"
 	},
 	"description": "A pixel graphics libary for D",
 	"license": "MIT",
