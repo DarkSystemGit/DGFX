@@ -20,9 +20,10 @@ static void gfxThread(Tid owner,string name){
     bool draw=true;
     
         gfxi=new GFXThread(name,[640,480]);
-        gfxi.palette=spalette;
+        
          gfxi.loop();
         while(running){
+            gfxi.palette=spalette;
         if(srender){
              sevents=gfxi.events;
              skeys=gfxi.getPressedKeys();
@@ -47,10 +48,11 @@ class GFX{
         this.pixels=spixels;     
         this.thread = spawn(&gfxThread, thisTid,name);
         this.events=sevents;
-        this.palette=spalette;
+        this.palette=defaultPalette.palette;
         running=true;
     }
     void render(){
+        spalette=this.palette;
         srender=true;
         while(srender){
             Thread.sleep(dur!("msecs")(1));
