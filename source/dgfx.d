@@ -253,13 +253,17 @@ class TileMap{
     }
     void draw(){
         if(!this.mod)return;
+        //writeln([x,y]);
+        this.pixels[]=0;
         foreach(p,ubyte tileid;tiles){
-            int x=cast(int)(floor(cast(float)(p/dims[0]))+x)*8+this.x;
-            int y=cast(int)((p%dims[1])+y)*8+this.y;
+            int x=cast(int)(floor(cast(float)(p/dims[0])))*8;
+            int y=cast(int)((p%dims[1]))*8;
             ubyte[64] tile=tileset[tileid];
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){
-                    pixels[cast(ulong)((y+i)*screenDims[0]+(x+j))]=tile[cast(ulong)(i*8+j)];
+                    if(((y+i+this.y)>=0)&&((y+i+this.y)<screenDims[1])&&((x+j+this.x)<screenDims[0])&&((x+j+this.x)>=0)){
+                        pixels[cast(ulong)((y+i+this.y)*screenDims[0]+(x+j+this.x))]=tile[cast(ulong)(i*8+j)];
+                    }
                 }
             }
 

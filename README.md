@@ -23,3 +23,5 @@ v1.2.0 Added support for better keyboard input
 v1.2.1 Optimized rendering
 
 v1.2.2 General Bugfixes
+
+v1.3.0 Tilemap support working! 
