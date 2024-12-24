@@ -8,7 +8,7 @@ SDL2 is also required for this library to work, get a copy for your platform fro
 Then simply add it to your project by running ```dub add dgfx```.
 ## Usage
 
-See ```source/test.d``` as an example for usage.
+See ```source/app.d``` as an example for usage.
 
 ## Changelog
 
