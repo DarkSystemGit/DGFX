@@ -25,3 +25,5 @@ v1.2.1 Optimized rendering
 v1.2.2 General Bugfixes
 
 v1.3.0 Tilemap support working! 
+
+v1.3.1 Tilemap bugfixes, tile array now y,x instead of x,y.
