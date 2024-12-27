@@ -4,7 +4,7 @@ import core.atomic;
 import core.thread;
 import core.sync;
 import core.time;
-static import dsdl2;
+static import dsdl;
 import bindbc.sdl;
 import defaultPalette;
 float pi=3.1415926;
@@ -14,7 +14,7 @@ __gshared string[] sevents;
 __gshared uint[256] spalette;
 __gshared bool running;
 __gshared int[] screenDims=[320,240];
-__gshared dsdl2.Scancode[] skeys;
+__gshared dsdl.Scancode[] skeys;
 static void gfxThread(Tid owner,string name){
     GFXThread gfxi;
     bool draw=true;
@@ -59,7 +59,7 @@ class GFX{
         }
         this.events=sevents;
     }
-    dsdl2.Scancode[] getPressedKeys(){
+    dsdl.Scancode[] getPressedKeys(){
         return skeys;
     }
     void kill(){

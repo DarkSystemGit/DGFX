@@ -1,10 +1,10 @@
 import std;
-static import dsdl2;
+static import dsdl;
 import bindbc.sdl;
 import defaultPalette;
 class GFXThread{
-    dsdl2.Window window;
-    dsdl2.Surface renderSurface;
+    dsdl.Window window;
+    dsdl.Surface renderSurface;
     ubyte[] pixels;
     ubyte[] renderPixels;
     bool running;
@@ -14,28 +14,28 @@ class GFXThread{
     uint[256] palette;
     uint[] renderBuffer;
     this(string name,uint[2] dimensions){
-        dsdl2.loadSO();
-        dsdl2.init(video : true);
+        dsdl.loadSO();
+        dsdl.init(video : true);
         this.dims=dimensions;
-        this.window=new dsdl2.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
+        this.window=new dsdl.Window(name,[0,0],dims, false,false,false,false,true,false,false,true);
         this.renderPixels=new ubyte[320*240];
-        this.renderSurface=new dsdl2.Surface([320,240],dsdl2.PixelFormat.rgba8888);
+        this.renderSurface=new dsdl.Surface([320,240],dsdl.PixelFormat.rgba8888);
         this.palette=defaultPalette.palette;
     }
-    dsdl2.Scancode[] getPressedKeys(){
-        dsdl2.Scancode[] keys;
-        foreach(int i,bool key;dsdl2.getKeyboardState()){
+    dsdl.Scancode[] getPressedKeys(){
+        dsdl.Scancode[] keys;
+        foreach(int i,bool key;dsdl.getKeyboardState()){
             if(key){
-                keys~=cast(dsdl2.Scancode)i;
+                keys~=cast(dsdl.Scancode)i;
             }
         }
         return keys;
     }
     void loop(){
         
-        dsdl2.pumpEvents();
-        while (auto event = dsdl2.pollEvent()) {
-            events~=event.toString().replace("dsdl2.","").replace("()","");
+        dsdl.pumpEvents();
+        while (auto event = dsdl.pollEvent()) {
+            events~=event.toString().replace("dsdl.","").replace("()","");
         }
          string err=SDL_GetError().to!string;
         if(err!=""){
@@ -47,11 +47,11 @@ class GFXThread{
              //renderPixels[i]=0;
             }
         }
-        window.surface.blitScaled(renderSurface,dsdl2.Rect(0,0,window.width,window.height));
+        window.surface.blitScaled(renderSurface,dsdl.Rect(0,0,window.width,window.height));
         window.update();
     }
    
     ~this(){
-         dsdl2.quit();
+         dsdl.quit();
     }
 }

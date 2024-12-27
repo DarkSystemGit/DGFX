@@ -15,3 +15,4 @@ sdltest
 *.o
 *.obj
 *.lst
+install.sh
