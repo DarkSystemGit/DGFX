@@ -257,7 +257,8 @@ class TileMap{
         this.pixels[]=0;
         foreach(p,ubyte tileid;tiles){
             int y=cast(int)(floor(cast(float)(p/dims[0])))*8;
-            int x=cast(int)((p%dims[1]))*8;
+            int x=cast(int)((p%dims[0]))*8;
+            //writeln([x,y]);
             ubyte[64] tile=tileset[tileid];
             for(int i=0;i<8;i++){
                 for(int j=0;j<8;j++){

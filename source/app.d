@@ -8,7 +8,7 @@ import std.math;
 void main() {
     GFX screen=new GFX("test",[0,0]);
     
-    TileMap tmap=new TileMap(new ubyte[16*16],[16,16],0,0);
+    TileMap tmap=new TileMap(new ubyte[20*10],[20,10],0,0);
     ubyte[64] tile;
     tile[]=245;
     tile[0..32]=255;
