@@ -30,6 +30,7 @@ void main() {
     Sprite sp;
     sp.pixels[]=0;
     screen.palette[1]=0x000000FF;
+    float[] pos=[0,0];
     for (int i;running;i++) {
         //long start=SDL_GetTicks();
         auto colchange = uniform(0, 255);
@@ -37,13 +38,14 @@ void main() {
         //screen.pixels[]=2;
         //sp.rotate(5);
         //sp.scale(1.005);
-        //sp.move(sp.x+0.05,sp.y+0.05);
+        pos[]-=0.05;
+        sp.move(pos[0],pos[1]);
         if((screen.events.length>0)&&(screen.events[screen.events.length-1]=="QuitEvent")){
             running=false;
         }
         if(i%256)sp.pixels[]=cast(ubyte)((sp.pixels[0]+1)-(floor(cast(float)(sp.pixels[0]+1)/255)*255));
-        tmap.x++;
-        tmap.y++;
+        tmap.x--;
+        tmap.y--;
         tmap.mod=true;
         tmap.render(screen.pixels);
         sp.draw(screen.pixels);

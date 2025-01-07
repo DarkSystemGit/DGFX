@@ -69,8 +69,8 @@ class GFX{
 struct Sprite{
     uint[2] dims=[16,16];
     ubyte[] pixels=new ubyte[16*16];
-    uint x;
-    uint y;
+    int x;
+    int y;
     float angle=0;
     bool mod;
      ubyte[] mpixels;
@@ -159,8 +159,8 @@ struct Sprite{
             this.angle+=op.args[0];
             break;
             case SpriteOps.move:
-            this.x=cast(uint)round(op.args[0]);
-            this.y=cast(uint)round(op.args[1]);
+            this.x=cast(int)(op.args[0]);
+            this.y=cast(int)(op.args[1]);
             break;
             case SpriteOps.resize:
             this.scaledDims=[op.args[0],op.args[1]];
@@ -209,8 +209,8 @@ struct Sprite{
         this.addOp(r);
     }
 }
-void setitem(ref ubyte[] pixels,uint x,uint y,ubyte pix,uint[] dims){
-    if(cast(ulong)(x+((y)*dims[0]))>=pixels.length)return;
+void setitem(ref ubyte[] pixels,int x,int y,ubyte pix,uint[] dims){
+    if((cast(long)(x+((y)*dims[0]))>=pixels.length)&&((x+((y)*dims[0]))>0))return;
     pixels[cast(ulong)(x+((y)*dims[0]))]=pix;
 }
 float[] matrix(int x,int y,uint[] dims,float angle){

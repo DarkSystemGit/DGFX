@@ -4,6 +4,6 @@
 		"bindbc-common": "1.0.3",
 		"bindbc-loader": "1.1.5",
 		"bindbc-sdl": "1.5.1",
-		"dsdl": "~main"
+		"dsdl": "1.0.0"
 	}
 }

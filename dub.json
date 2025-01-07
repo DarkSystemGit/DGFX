@@ -2,11 +2,34 @@
 	"authors": [
 		"darksystem"
 	],
+	"configurations": [
+		{
+			"excludedSourceFiles": [],
+			"mainSourceFile": "source/app.d",
+			"name": "application",
+			"targetType": "executable"
+		},
+		{
+			"excludedSourceFiles": [
+				"source/app.d",
+				"source/app.d"
+			],
+			"name": "library",
+			"targetType": "library"
+		}
+	],
 	"copyright": "Copyright © 2024, darksystem",
 	"dependencies": {
-		"dsdl": "~main"
+		"dsdl": "1.0.0"
 	},
 	"description": "A pixel graphics libary for D",
+	"importPaths": [
+		"source/"
+	],
 	"license": "MIT",
-	"name": "dgfx"
+	"name": "dgfx",
+	"sourcePaths": [
+		"source/"
+	],
+	"version": "1.3.4"
 }
