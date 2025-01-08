@@ -78,8 +78,8 @@ struct Sprite{
     void draw(ref ubyte[] rpixels){
         if(!mod){
         foreach(i,ubyte pix;pixels){
-                int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
-                int y=cast(int)((i%dims[1])+this.y);
+                int y=cast(int)(floor(cast(float)(i/dims[0]))+this.y);
+                int x=cast(int)((i%dims[1])+this.x);
                 if(
                     (pix!=0)&&(x<screenDims[0])&&(y<screenDims[1])&&(x>=0)&&(y>=0)
                 ){
@@ -88,8 +88,8 @@ struct Sprite{
             }
         }else{
             foreach(i,ubyte pix;mpixels){
-                int x=cast(int)(floor(cast(float)(i/dims[0]))+this.x);
-                int y=cast(int)((i%dims[1])+this.y);
+                int y=cast(int)(floor(cast(float)(i/dims[0]))+this.y);
+                int x=cast(int)((i%dims[1])+this.x);
                 if(
                     (pix!=0)&&(x<screenDims[0])&&(y<screenDims[1])&&(x>=0)&&(y>=0)
                 ){

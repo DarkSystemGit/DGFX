@@ -35,13 +35,19 @@ void main() {
         auto colchange = uniform(0, 255);
         screen.pixels[]=1;
         //screen.pixels[]=2;
-        //sp.rotate(5);
-        //sp.scale(1.005);
-        //sp.move(sp.x+0.05,sp.y+0.05);
+        sp.rotate(5);
+        sp.scale(1.005);
+        sp.move(sp.x+0.05,sp.y+0.05);
         if((screen.events.length>0)&&(screen.events[screen.events.length-1]=="QuitEvent")){
             running=false;
         }
-        if(i%256)sp.pixels[]=cast(ubyte)((sp.pixels[0]+1)-(floor(cast(float)(sp.pixels[0]+1)/255)*255));
+        if(i%256){
+            ubyte val=cast(ubyte)((sp.pixels[0]+1)-(floor(cast(float)(sp.pixels[0]+1)/255)*255));
+        sp.pixels[]=val;
+       for(int c=32;c<64;c++){
+            sp.pixels[c]=cast(ubyte)(val-6);
+        }
+        }
         tmap.x++;
         tmap.y++;
         tmap.mod=true;
