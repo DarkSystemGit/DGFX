@@ -29,3 +29,5 @@ v1.3.0 Tilemap support working!
 v1.3.1 Tilemap bugfixes, tile array now y,x instead of x,y.
 
 v1.3.2-v1.3.5 Assorted rendering bugfixes 
+
+v1.3.6 Mac support
